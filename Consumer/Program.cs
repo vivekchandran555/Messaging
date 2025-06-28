@@ -87,18 +87,18 @@ consumer.ReceivedAsync += async (model, args) =>
             };
 
             await channel.BasicPublishAsync(
-                string.Empty,
-                retryQueue,
-                false,
-                props,
-                args.Body);
+                exchange: string.Empty,
+                routingKey: retryQueue,
+                mandatory: true,
+                basicProperties: props,
+                body: args.Body);
 
-            await channel.BasicAckAsync(args.DeliveryTag, false);
+            await channel.BasicAckAsync(deliveryTag: args.DeliveryTag, multiple: false);
         }
         else
         {
             Console.WriteLine("Exceeded max retry count. Sending to DLQ.");
-            await channel.BasicNackAsync(args.DeliveryTag, false, false);
+            await channel.BasicNackAsync(deliveryTag: args.DeliveryTag, multiple: false, requeue: false);
         }
     }
 };

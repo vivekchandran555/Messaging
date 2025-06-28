@@ -8,7 +8,6 @@ using var connection = await factory.CreateConnectionAsync();
 using var channel = await connection.CreateChannelAsync();
 
 string mainQueue = "message-queue";
-string retryQueue = mainQueue + "_retry";
 string deadLetterQueue = mainQueue + "_dead";
 
 await channel.QueueDeclareAsync(
